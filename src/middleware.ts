@@ -42,6 +42,16 @@ export async function middleware(request: NextRequest) {
   const { user, response, supabase } = await updateSession(request)
   const { pathname } = request.nextUrl
 
+  // If Supabase is not configured, allow all routes (show login page)
+  if (!supabase) {
+    if (isPublicRoute(pathname) || pathname === '/') {
+      return response
+    }
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
   // Allow public routes for unauthenticated users
   if (!user) {
     if (isPublicRoute(pathname) || pathname === '/') {
