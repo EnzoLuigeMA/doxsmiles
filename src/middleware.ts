@@ -39,8 +39,14 @@ function getRouteRole(pathname: string): UserRole | null {
 }
 
 export async function middleware(request: NextRequest) {
-  const { user, response, supabase } = await updateSession(request)
   const { pathname } = request.nextUrl
+
+  // Skip middleware for API routes — they handle their own auth
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
+
+  const { user, response, supabase } = await updateSession(request)
 
   // If Supabase is not configured, allow all routes (show login page)
   if (!supabase) {
