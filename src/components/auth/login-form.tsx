@@ -41,7 +41,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-lg bg-red-900/30 border border-red-800 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400 animate-fade-in-up">
           {error}
         </div>
       )}
@@ -77,18 +77,19 @@ export function LoginForm() {
         Entrar
       </Button>
 
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-3 pt-2">
         <Link
           href="/auth/recover"
-          className="text-sm text-dox-muted hover:text-dox-red transition-colors"
+          className="text-xs text-dox-muted hover:text-white transition-colors duration-300"
         >
           Esqueci minha senha
         </Link>
+        <div className="w-12 h-px bg-white/10" />
         <Link
           href="/cadastro"
-          className="text-sm text-dox-muted hover:text-dox-white transition-colors"
+          className="text-xs text-dox-muted hover:text-white transition-colors duration-300"
         >
-          Ainda nao tenho conta? <span className="text-dox-red">Criar conta</span>
+          Ainda nao tenho conta? <span className="text-gradient-red font-semibold">Criar conta</span>
         </Link>
       </div>
     </form>

@@ -37,7 +37,6 @@ export function SignUpForm() {
 
     setLoading(true)
 
-    // Create account via API (creates auth user + profile)
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -56,7 +55,6 @@ export function SignUpForm() {
       return
     }
 
-    // Auto-login after signup
     const supabase = createClient()
     const { error: loginError } = await supabase.auth.signInWithPassword({
       email,
@@ -64,7 +62,6 @@ export function SignUpForm() {
     })
 
     if (loginError) {
-      // Account created but login failed, redirect to login page
       router.push('/login')
       return
     }
@@ -75,7 +72,7 @@ export function SignUpForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-lg bg-red-900/30 border border-red-800 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400 animate-fade-in-up">
           {error}
         </div>
       )}
@@ -133,12 +130,12 @@ export function SignUpForm() {
         Criar conta
       </Button>
 
-      <div className="text-center">
+      <div className="text-center pt-2">
         <Link
           href="/login"
-          className="text-sm text-dox-muted hover:text-dox-red transition-colors"
+          className="text-xs text-dox-muted hover:text-white transition-colors duration-300"
         >
-          Ja tenho uma conta
+          Ja tenho uma conta? <span className="text-gradient-red font-semibold">Entrar</span>
         </Link>
       </div>
     </form>

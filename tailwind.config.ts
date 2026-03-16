@@ -14,11 +14,11 @@ const config: Config = {
           red: "#CC0000",
           "red-dark": "#880000",
           black: "#0A0A0A",
-          surface: "#141414",
-          "surface-2": "#1E1E1E",
+          surface: "#111111",
+          "surface-2": "#1A1A1A",
           white: "#F0F0F0",
           muted: "#888888",
-          border: "#2A2A2A",
+          border: "#222222",
         },
         level: {
           bronze: "#cd7f32",
@@ -34,6 +34,10 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.25rem',
       },
     },
   },

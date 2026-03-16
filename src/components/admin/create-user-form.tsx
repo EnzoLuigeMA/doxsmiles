@@ -5,6 +5,12 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+const roleOptions = [
+  { value: 'teacher' as const, label: 'Professor', icon: '📚', color: 'from-yellow-500/20 to-yellow-900/10 border-yellow-500/30 text-yellow-400' },
+  { value: 'student' as const, label: 'Aluno', icon: '🎓', color: 'from-green-500/20 to-green-900/10 border-green-500/30 text-green-400' },
+  { value: 'admin' as const, label: 'Admin', icon: '🛡️', color: 'from-red-500/20 to-red-900/10 border-red-500/30 text-red-400' },
+]
+
 export function CreateUserForm() {
   const router = useRouter()
   const [name, setName] = useState('')
@@ -46,12 +52,12 @@ export function CreateUserForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-lg bg-red-900/30 border border-red-800 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400 animate-fade-in-up">
           {error}
         </div>
       )}
       {success && (
-        <div className="rounded-lg bg-green-900/30 border border-green-800 px-4 py-3 text-sm text-green-400">
+        <div className="rounded-xl bg-green-500/10 border border-green-500/20 px-4 py-3 text-sm text-green-400 animate-fade-in-up">
           {success}
         </div>
       )}
@@ -87,22 +93,23 @@ export function CreateUserForm() {
       />
 
       <div>
-        <label className="block text-sm font-medium text-dox-white mb-1.5">
+        <label className="block text-xs font-medium text-dox-muted uppercase tracking-wider mb-2">
           Tipo de usuario
         </label>
-        <div className="flex gap-2">
-          {(['teacher', 'student', 'admin'] as const).map((r) => (
+        <div className="grid grid-cols-3 gap-2">
+          {roleOptions.map((r) => (
             <button
-              key={r}
+              key={r.value}
               type="button"
-              onClick={() => setRole(r)}
-              className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
-                role === r
-                  ? 'bg-dox-red border-dox-red text-white'
-                  : 'bg-dox-surface-2 border-dox-border text-dox-muted hover:text-dox-white'
+              onClick={() => setRole(r.value)}
+              className={`px-2 py-2.5 text-xs rounded-xl border transition-all duration-300 flex flex-col items-center gap-1 ${
+                role === r.value
+                  ? `bg-gradient-to-br ${r.color} scale-[1.02]`
+                  : 'bg-white/[0.03] border-white/8 text-dox-muted hover:bg-white/[0.05] hover:border-white/15'
               }`}
             >
-              {r === 'teacher' ? 'Professor' : r === 'student' ? 'Aluno' : 'Admin'}
+              <span className="text-base">{r.icon}</span>
+              <span className="font-medium">{r.label}</span>
             </button>
           ))}
         </div>

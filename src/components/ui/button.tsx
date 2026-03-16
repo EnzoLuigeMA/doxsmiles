@@ -14,25 +14,29 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dox-red disabled:opacity-50 disabled:cursor-not-allowed',
+          'relative inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dox-red focus-visible:ring-offset-2 focus-visible:ring-offset-dox-black disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group',
           {
-            'bg-dox-red hover:bg-dox-red-dark text-white': variant === 'primary',
-            'bg-dox-surface-2 hover:bg-dox-border text-dox-white border border-dox-border': variant === 'secondary',
-            'hover:bg-dox-surface-2 text-dox-muted hover:text-dox-white': variant === 'ghost',
-            'bg-red-900 hover:bg-red-800 text-white': variant === 'destructive',
+            'bg-gradient-to-r from-dox-red to-red-700 text-white shadow-lg shadow-dox-red/20 hover:shadow-dox-red/40 hover:scale-[1.02] active:scale-[0.98]': variant === 'primary',
+            'bg-white/5 hover:bg-white/10 text-dox-white border border-white/10 hover:border-white/20 backdrop-blur-sm': variant === 'secondary',
+            'hover:bg-white/5 text-dox-muted hover:text-dox-white': variant === 'ghost',
+            'bg-red-950/80 hover:bg-red-900/80 text-red-400 border border-red-900/50 hover:border-red-800/50': variant === 'destructive',
           },
           {
-            'h-8 px-3 text-sm': size === 'sm',
-            'h-10 px-4 text-sm': size === 'md',
-            'h-12 px-6 text-base': size === 'lg',
+            'h-8 px-3 text-xs gap-1.5': size === 'sm',
+            'h-10 px-5 text-sm gap-2': size === 'md',
+            'h-12 px-6 text-sm gap-2': size === 'lg',
           },
           className
         )}
         {...props}
       >
+        {/* Shimmer effect on primary */}
+        {variant === 'primary' && !disabled && !loading && (
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+        )}
         {loading ? (
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -45,7 +49,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         ) : null}
-        {children}
+        <span className="relative z-10">{children}</span>
       </button>
     )
   }

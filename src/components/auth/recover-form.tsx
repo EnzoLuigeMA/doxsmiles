@@ -36,13 +36,17 @@ export function RecoverForm() {
 
   if (success) {
     return (
-      <div className="space-y-4 text-center">
-        <div className="rounded-lg bg-green-900/30 border border-green-800 px-4 py-3 text-sm text-green-400">
-          Link de recuperação enviado! Verifique seu email.
+      <div className="space-y-5 text-center animate-fade-in-up">
+        <div className="w-16 h-16 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
+          <span className="text-3xl">✉️</span>
+        </div>
+        <div>
+          <p className="text-sm text-white font-medium">Link enviado!</p>
+          <p className="text-xs text-dox-muted mt-1">Verifique seu email para redefinir a senha.</p>
         </div>
         <Link
           href="/login"
-          className="text-sm text-dox-muted hover:text-dox-red transition-colors"
+          className="text-xs text-dox-muted hover:text-white transition-colors"
         >
           Voltar ao login
         </Link>
@@ -52,12 +56,12 @@ export function RecoverForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <p className="text-sm text-dox-muted text-center">
-        Digite seu email para receber um link de recuperação de senha.
+      <p className="text-xs text-dox-muted text-center">
+        Digite seu email para receber um link de recuperacao.
       </p>
 
       {error && (
-        <div className="rounded-lg bg-red-900/30 border border-red-800 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400 animate-fade-in-up">
           {error}
         </div>
       )}
@@ -79,13 +83,13 @@ export function RecoverForm() {
         size="lg"
         loading={loading}
       >
-        Enviar link de recuperação
+        Enviar link
       </Button>
 
       <div className="text-center">
         <Link
           href="/login"
-          className="text-sm text-dox-muted hover:text-dox-red transition-colors"
+          className="text-xs text-dox-muted hover:text-white transition-colors"
         >
           Voltar ao login
         </Link>

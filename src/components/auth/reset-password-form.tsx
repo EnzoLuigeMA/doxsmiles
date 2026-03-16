@@ -18,7 +18,7 @@ export function ResetPasswordForm() {
     setError('')
 
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem.')
+      setError('As senhas nao coincidem.')
       return
     }
 
@@ -45,12 +45,12 @@ export function ResetPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <p className="text-sm text-dox-muted text-center">
+      <p className="text-xs text-dox-muted text-center">
         Digite sua nova senha.
       </p>
 
       {error && (
-        <div className="rounded-lg bg-red-900/30 border border-red-800 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400 animate-fade-in-up">
           {error}
         </div>
       )}
