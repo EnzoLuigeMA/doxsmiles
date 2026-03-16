@@ -16,15 +16,6 @@ const ROLE_HOME: Record<UserRole, string> = {
   admin: '/admin',
 }
 
-function getRoleFromJWT(accessToken: string): UserRole {
-  try {
-    const payload = JSON.parse(atob(accessToken.split('.')[1]))
-    return payload.user_role || 'student'
-  } catch {
-    return 'student'
-  }
-}
-
 function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
 }
@@ -68,12 +59,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // User is authenticated — get role from session
-  const { data: { session } } = await supabase.auth.getSession()
-  const role = session?.access_token
-    ? getRoleFromJWT(session.access_token)
-    : 'student'
+  // User is authenticated — get role from database (more reliable than JWT)
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
 
+  const role: UserRole = (profile as { role: UserRole } | null)?.role || 'student'
   const home = ROLE_HOME[role]
 
   // Redirect authenticated users away from public/login routes
