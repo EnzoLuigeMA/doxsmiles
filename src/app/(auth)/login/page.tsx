@@ -2,7 +2,7 @@ import { Logo } from '@/components/auth/logo'
 import { LoginForm } from '@/components/auth/login-form'
 
 export const metadata = {
-  title: 'Login - DOXSmiles',
+  title: 'Login - DoxMiles',
 }
 
 export default function LoginPage() {
@@ -12,7 +12,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center gap-4">
           <Logo size="lg" />
           <div className="text-center">
-            <h1 className="text-xl font-bold text-dox-white">DOXSmiles</h1>
+            <h1 className="text-xl font-bold text-dox-white">DoxMiles</h1>
             <p className="text-sm text-dox-muted mt-1">
               Sua plataforma de recompensas
             </p>

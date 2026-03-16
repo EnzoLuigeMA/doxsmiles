@@ -6,7 +6,7 @@ type Voucher = Database['public']['Tables']['vouchers']['Row']
 type Product = Database['public']['Tables']['products']['Row']
 
 export const metadata = {
-  title: 'Vouchers - DOXSmiles',
+  title: 'Vouchers - DoxMiles',
 }
 
 const statusConfig = {

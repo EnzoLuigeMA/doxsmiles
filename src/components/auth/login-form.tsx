@@ -77,12 +77,18 @@ export function LoginForm() {
         Entrar
       </Button>
 
-      <div className="text-center">
+      <div className="flex flex-col items-center gap-2">
         <Link
           href="/auth/recover"
           className="text-sm text-dox-muted hover:text-dox-red transition-colors"
         >
           Esqueci minha senha
+        </Link>
+        <Link
+          href="/cadastro"
+          className="text-sm text-dox-muted hover:text-dox-white transition-colors"
+        >
+          Ainda nao tenho conta? <span className="text-dox-red">Criar conta</span>
         </Link>
       </div>
     </form>

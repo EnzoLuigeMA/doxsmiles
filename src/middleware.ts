@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 import type { UserRole } from '@/types/auth'
 
-const PUBLIC_ROUTES = ['/login', '/auth/callback', '/auth/recover', '/auth/reset-password']
+const PUBLIC_ROUTES = ['/login', '/cadastro', '/auth/callback', '/auth/recover', '/auth/reset-password']
 
 const ROLE_ROUTES: Record<UserRole, string[]> = {
   student: ['/dashboard', '/loja', '/historico', '/vouchers'],

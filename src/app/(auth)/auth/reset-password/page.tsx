@@ -2,7 +2,7 @@ import { Logo } from '@/components/auth/logo'
 import { ResetPasswordForm } from '@/components/auth/reset-password-form'
 
 export const metadata = {
-  title: 'Redefinir Senha - DOXSmiles',
+  title: 'Redefinir Senha - DoxMiles',
 }
 
 export default function ResetPasswordPage() {

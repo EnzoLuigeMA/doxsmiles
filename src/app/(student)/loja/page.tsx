@@ -5,7 +5,7 @@ import type { Database } from '@/types/database'
 type Product = Database['public']['Tables']['products']['Row']
 
 export const metadata = {
-  title: 'Loja - DOXSmiles',
+  title: 'Loja - DoxMiles',
 }
 
 export default async function LojaPage() {

@@ -13,7 +13,7 @@ const levelConfig = {
 } as const
 
 export const metadata = {
-  title: 'Dashboard - DOXSmiles',
+  title: 'Dashboard - DoxMiles',
 }
 
 export default async function DashboardPage() {
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-dox-white">
           Ola, {user.name.split(' ')[0]}!
         </h1>
-        <p className="text-sm text-dox-muted mt-1">Bem-vindo ao DOXSmiles</p>
+        <p className="text-sm text-dox-muted mt-1">Bem-vindo ao DoxMiles</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

@@ -8,7 +8,7 @@ type Tx = Database['public']['Tables']['point_transactions']['Row']
 type Rule = Database['public']['Tables']['point_rules']['Row']
 
 export const metadata = {
-  title: 'Professor - DOXSmiles',
+  title: 'Professor - DoxMiles',
 }
 
 export default async function ProfessorPage() {

@@ -6,7 +6,7 @@ type Tx = Database['public']['Tables']['point_transactions']['Row']
 type Rule = Database['public']['Tables']['point_rules']['Row']
 
 export const metadata = {
-  title: 'Historico - DOXSmiles',
+  title: 'Historico - DoxMiles',
 }
 
 export default async function HistoricoPage() {

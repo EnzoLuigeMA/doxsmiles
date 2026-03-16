@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "DOXSmiles - DOX English School",
+  title: "DoxMiles - DOX English School",
   description: "Plataforma de fidelidade gamificada da DOX English School",
 };
 
