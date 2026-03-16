@@ -10,9 +10,9 @@ export const metadata = {
 }
 
 const statusConfig = {
-  active: { label: 'Ativo', color: 'text-green-400 bg-green-900/30 border-green-800' },
-  used: { label: 'Usado', color: 'text-dox-muted bg-dox-surface-2 border-dox-border' },
-  expired: { label: 'Expirado', color: 'text-red-400 bg-red-900/30 border-red-800' },
+  active: { label: 'Ativo', color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: '✅' },
+  used: { label: 'Usado', color: 'bg-white/5 text-dox-muted border-white/10', icon: '✓' },
+  expired: { label: 'Expirado', color: 'bg-red-500/10 text-red-400 border-red-500/20', icon: '⏰' },
 } as const
 
 export default async function VouchersPage() {
@@ -27,7 +27,6 @@ export default async function VouchersPage() {
 
   const voucherList: Voucher[] = (vouchersRaw as Voucher[]) || []
 
-  // Fetch products for enrichment
   const { data: productsRaw } = await supabase.from('products').select('*')
   const productsMap = new Map((productsRaw as Product[] || []).map((p) => [p.id, p]))
 
@@ -36,59 +35,83 @@ export default async function VouchersPage() {
     product: productsMap.get(v.product_id) || null,
   }))
 
+  const activeCount = vouchers.filter((v) => v.status === 'active').length
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-dox-white">Meus Vouchers</h1>
-        <p className="text-sm text-dox-muted mt-1">Seus premios resgatados</p>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 animate-fade-in-up">
+        <div>
+          <p className="text-sm text-dox-muted mb-1">Seus premios</p>
+          <h1 className="text-3xl font-bold text-white">Vouchers</h1>
+        </div>
+        {activeCount > 0 && (
+          <div className="glass-card rounded-xl px-4 py-2 glow-red">
+            <p className="text-xs text-dox-muted">Vouchers ativos</p>
+            <p className="text-lg font-bold text-green-400">{activeCount}</p>
+          </div>
+        )}
       </div>
 
       {vouchers.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {vouchers.map((voucher) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {vouchers.map((voucher, i) => {
             const status = statusConfig[voucher.status]
+            const isActive = voucher.status === 'active'
 
             return (
               <div
                 key={voucher.id}
-                className="bg-dox-surface rounded-xl border border-dox-border p-4 space-y-3"
+                className={`glass-card rounded-2xl overflow-hidden animate-fade-in-up ${isActive ? 'glow-red' : ''}`}
+                style={{ animationDelay: `${i * 0.05}s` }}
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold text-dox-white text-sm">
-                      {voucher.product?.name || 'Produto'}
-                    </h3>
-                    <p className="text-xs text-dox-muted mt-0.5">
-                      {voucher.product?.category}
-                    </p>
+                {/* Ticket top */}
+                <div className="p-5 pb-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold text-white text-sm">
+                        {voucher.product?.name || 'Produto'}
+                      </h3>
+                      <p className="text-xs text-dox-muted mt-0.5 capitalize">
+                        {voucher.product?.category}
+                      </p>
+                    </div>
+                    <span className={`text-xs px-2.5 py-1 rounded-full border font-medium ${status.color}`}>
+                      {status.icon} {status.label}
+                    </span>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded border ${status.color}`}>
-                    {status.label}
-                  </span>
                 </div>
 
-                <div className="bg-dox-surface-2 rounded-lg p-3 text-center">
-                  <p className="text-xs text-dox-muted mb-1">Codigo do voucher</p>
-                  <p className="font-mono text-lg text-dox-white tracking-wider">{voucher.code}</p>
+                {/* Ticket divider (dashed) */}
+                <div className="relative px-5">
+                  <div className="border-t border-dashed border-white/10" />
+                  <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-dox-black rounded-full" />
+                  <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-dox-black rounded-full" />
                 </div>
 
-                <div className="flex justify-between text-xs text-dox-muted">
-                  <span>{voucher.points_spent} pts</span>
-                  <span>
-                    Expira: {voucher.expires_at ? new Date(voucher.expires_at).toLocaleDateString('pt-BR') : '-'}
-                  </span>
+                {/* Ticket bottom */}
+                <div className="p-5 pt-4">
+                  <div className="bg-white/[0.03] rounded-xl p-4 text-center mb-3">
+                    <p className="text-[10px] text-dox-muted uppercase tracking-widest mb-1">Codigo</p>
+                    <p className="font-mono text-xl text-white tracking-[0.2em] font-bold">{voucher.code}</p>
+                  </div>
+
+                  <div className="flex justify-between text-xs text-dox-muted">
+                    <span>{voucher.points_spent.toLocaleString('pt-BR')} pts</span>
+                    <span>
+                      Expira: {voucher.expires_at ? new Date(voucher.expires_at).toLocaleDateString('pt-BR') : '-'}
+                    </span>
+                  </div>
                 </div>
               </div>
             )
           })}
         </div>
       ) : (
-        <div className="bg-dox-surface rounded-xl border border-dox-border p-12 text-center">
-          <p className="text-dox-muted text-sm">
-            Voce ainda nao resgatou nenhum voucher.
-          </p>
-          <p className="text-dox-muted text-xs mt-1">
-            Visite a Loja para trocar seus pontos por premios!
+        <div className="glass-card rounded-2xl p-16 text-center animate-fade-in-up">
+          <span className="text-5xl block mb-4">🎟️</span>
+          <p className="text-white font-medium">Voce ainda nao resgatou nenhum voucher.</p>
+          <p className="text-dox-muted text-sm mt-2">
+            Visite a <span className="text-gradient-red font-semibold">Loja</span> para trocar seus pontos por premios!
           </p>
         </div>
       )}

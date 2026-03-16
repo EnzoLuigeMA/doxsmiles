@@ -11,26 +11,23 @@ export default async function TeacherLayout({
   const user = await requireRole('teacher')
 
   return (
-    <div className="min-h-screen bg-dox-black">
-      <header className="sticky top-0 z-50 border-b border-dox-border bg-dox-surface/80 backdrop-blur-sm">
-        <div className="mx-auto max-w-5xl flex items-center justify-between px-4 h-14">
+    <div className="min-h-screen bg-dox-black bg-dots">
+      <header className="sticky top-0 z-50 glass border-b border-white/5">
+        <div className="mx-auto max-w-5xl flex items-center justify-between px-4 h-16">
           <div className="flex items-center gap-6">
-            <Logo size="sm" showText={false} />
-            <Link
-              href="/professor"
-              className="px-3 py-1.5 text-sm text-dox-white font-medium"
-            >
-              Painel do Professor
+            <Link href="/professor" className="flex items-center gap-2">
+              <Logo size="sm" showText={false} />
+              <span className="text-sm font-black text-gradient-red">Professor</span>
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-dox-muted">{user.name}</span>
+            <span className="text-xs text-dox-muted bg-white/5 px-3 py-1 rounded-full">{user.name}</span>
             <SignOutButton size="sm" />
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6">
+      <main className="mx-auto max-w-5xl px-4 py-8">
         {children}
       </main>
     </div>

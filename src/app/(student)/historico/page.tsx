@@ -9,6 +9,13 @@ export const metadata = {
   title: 'Historico - DoxMiles',
 }
 
+const categoryConfig: Record<string, { label: string; color: string }> = {
+  classroom: { label: 'Sala de Aula', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+  financial: { label: 'Financeiro', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+  social: { label: 'Social', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+  bonus: { label: 'Bonus', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' },
+}
+
 export default async function HistoricoPage() {
   const user = await requireAuth()
   const supabase = await createClient()
@@ -30,57 +37,73 @@ export default async function HistoricoPage() {
     rule: tx.rule_id ? rulesMap.get(tx.rule_id) || null : null,
   }))
 
-  const categoryLabels: Record<string, string> = {
-    classroom: 'Sala de Aula',
-    financial: 'Financeiro',
-    social: 'Social',
-    bonus: 'Bonus',
-  }
+  // Calculate total earned
+  const totalEarned = transactions.reduce((sum, tx) => sum + tx.points_awarded + tx.bonus_points, 0)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-dox-white">Historico de Pontos</h1>
-        <p className="text-sm text-dox-muted mt-1">Todas as suas conquistas</p>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 animate-fade-in-up">
+        <div>
+          <p className="text-sm text-dox-muted mb-1">Suas conquistas</p>
+          <h1 className="text-3xl font-bold text-white">Historico</h1>
+        </div>
+        <div className="flex gap-3">
+          <div className="glass-card rounded-xl px-4 py-2 text-center">
+            <p className="text-xs text-dox-muted">Total ganho</p>
+            <p className="text-lg font-bold text-green-400">+{totalEarned.toLocaleString('pt-BR')}</p>
+          </div>
+          <div className="glass-card rounded-xl px-4 py-2 text-center">
+            <p className="text-xs text-dox-muted">Atividades</p>
+            <p className="text-lg font-bold text-white">{transactions.length}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-dox-surface rounded-xl border border-dox-border">
-        <div className="divide-y divide-dox-border">
+      <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up stagger-1">
+        <div className="divide-y divide-white/5">
           {transactions.length > 0 ? (
-            transactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-dox-surface-2 flex items-center justify-center text-lg">
-                    {tx.rule?.icon || '+'}
-                  </div>
-                  <div>
-                    <p className="text-sm text-dox-white">{tx.rule?.action_name || 'Pontos'}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-dox-muted">
-                        {new Date(tx.created_at).toLocaleDateString('pt-BR')}
-                      </span>
-                      {tx.rule?.category && (
-                        <>
-                          <span className="text-dox-border">·</span>
-                          <span className="text-xs text-dox-muted">
-                            {categoryLabels[tx.rule.category] || tx.rule.category}
+            transactions.map((tx, i) => {
+              const cat = tx.rule?.category ? categoryConfig[tx.rule.category] : null
+              return (
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between p-5 hover:bg-white/[0.02] transition-colors animate-slide-in-right"
+                  style={{ animationDelay: `${i * 0.03}s` }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-xl">
+                      {tx.rule?.icon || '⭐'}
+                    </div>
+                    <div>
+                      <p className="text-sm text-white font-medium">{tx.rule?.action_name || 'Pontos'}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-dox-muted">
+                          {new Date(tx.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
+                        {cat && (
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full border ${cat.color}`}>
+                            {cat.label}
                           </span>
-                        </>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="text-right">
+                    <span className="text-sm font-bold text-green-400 bg-green-400/10 px-3 py-1 rounded-full">
+                      +{tx.points_awarded}
+                    </span>
+                    {tx.bonus_points > 0 && (
+                      <p className="text-xs text-yellow-400 mt-1 font-medium">+{tx.bonus_points} bonus</p>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-sm font-semibold text-green-400">+{tx.points_awarded}</span>
-                  {tx.bonus_points > 0 && (
-                    <p className="text-xs text-yellow-400">+{tx.bonus_points} bonus</p>
-                  )}
-                </div>
-              </div>
-            ))
+              )
+            })
           ) : (
-            <div className="p-12 text-center text-dox-muted text-sm">
-              Nenhuma transacao encontrada.
+            <div className="p-16 text-center">
+              <span className="text-5xl block mb-4">📊</span>
+              <p className="text-dox-muted text-sm">Nenhuma atividade registrada ainda.</p>
+              <p className="text-dox-muted text-xs mt-1">Participe das aulas para comecar a ganhar pontos!</p>
             </div>
           )}
         </div>

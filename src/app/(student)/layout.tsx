@@ -1,62 +1,80 @@
+'use client'
+
 import Link from 'next/link'
-import { requireAuth } from '@/lib/auth/helpers'
+import { usePathname } from 'next/navigation'
 import { SignOutButton } from '@/components/auth/sign-out-button'
 import { Logo } from '@/components/auth/logo'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/loja', label: 'Loja' },
-  { href: '/historico', label: 'Historico' },
-  { href: '/vouchers', label: 'Vouchers' },
+  { href: '/dashboard', label: 'Dashboard', icon: '⚡' },
+  { href: '/loja', label: 'Loja', icon: '🏪' },
+  { href: '/historico', label: 'Historico', icon: '📊' },
+  { href: '/vouchers', label: 'Vouchers', icon: '🎟️' },
 ]
 
-export default async function StudentLayout({
+export default function StudentLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await requireAuth()
+  const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-dox-black">
+    <div className="min-h-screen bg-dox-black bg-dots">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-dox-border bg-dox-surface/80 backdrop-blur-sm">
-        <div className="mx-auto max-w-5xl flex items-center justify-between px-4 h-14">
-          <div className="flex items-center gap-6">
-            <Logo size="sm" showText={false} />
+      <header className="sticky top-0 z-50 glass border-b border-white/5">
+        <div className="mx-auto max-w-5xl flex items-center justify-between px-4 h-16">
+          <div className="flex items-center gap-8">
+            <Link href="/dashboard" className="flex items-center gap-2 group">
+              <Logo size="sm" showText={false} />
+              <span className="text-sm font-bold text-gradient-red hidden sm:block">DoxMiles</span>
+            </Link>
             <nav className="hidden sm:flex items-center gap-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="px-3 py-1.5 text-sm text-dox-muted hover:text-dox-white rounded-md hover:bg-dox-surface-2 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`px-4 py-2 text-sm rounded-xl transition-all duration-300 flex items-center gap-2 ${
+                      isActive
+                        ? 'bg-dox-red/10 text-white border border-dox-red/20 glow-red'
+                        : 'text-dox-muted hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="text-base">{item.icon}</span>
+                    {item.label}
+                  </Link>
+                )
+              })}
             </nav>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-dox-muted hidden sm:block">{user.dox_id}</span>
-            <SignOutButton size="sm" />
-          </div>
+          <SignOutButton size="sm" />
         </div>
         {/* Mobile nav */}
-        <nav className="sm:hidden flex items-center gap-1 px-4 pb-2 overflow-x-auto">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="px-3 py-1.5 text-xs text-dox-muted hover:text-dox-white rounded-md hover:bg-dox-surface-2 transition-colors whitespace-nowrap"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="sm:hidden flex items-center gap-1 px-4 pb-3 overflow-x-auto">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`px-3 py-2 text-xs rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  isActive
+                    ? 'bg-dox-red/10 text-white border border-dox-red/20'
+                    : 'text-dox-muted hover:text-white'
+                }`}
+              >
+                <span>{item.icon}</span>
+                {item.label}
+              </Link>
+            )
+          })}
         </nav>
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-5xl px-4 py-6">
+      <main className="mx-auto max-w-5xl px-4 py-8">
         {children}
       </main>
     </div>
