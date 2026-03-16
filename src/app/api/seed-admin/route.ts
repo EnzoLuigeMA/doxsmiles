@@ -4,14 +4,13 @@ import { createAdminClient } from '@/lib/supabase/admin'
 export async function POST(request: Request) {
   const { secret, email, password, name } = await request.json()
 
-  // Protect with a secret key
   if (secret !== process.env.ADMIN_SEED_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const supabase = createAdminClient()
 
-  // Create auth user
+  // Create auth user — the DB trigger handle_new_user() auto-creates the profile
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email,
     password,
@@ -23,21 +22,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: authError.message }, { status: 400 })
   }
 
-  // Create user profile
-  const { error: profileError } = await supabase.from('users').insert({
-    id: authData.user.id,
-    name,
-    email,
-    role: 'admin',
-    level: 'elite',
-    total_points: 0,
-    lifetime_points: 0,
-    streak_weeks: 0,
-  } as never)
-
-  if (profileError) {
-    return NextResponse.json({ error: profileError.message }, { status: 400 })
-  }
+  // Update the profile to admin + elite (trigger creates as student by default metadata)
+  await supabase
+    .from('users')
+    .update({ role: 'admin', level: 'elite' } as never)
+    .eq('id', authData.user.id)
 
   return NextResponse.json({ success: true, userId: authData.user.id })
 }

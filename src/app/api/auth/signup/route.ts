@@ -15,12 +15,12 @@ export async function POST(request: Request) {
 
   const supabase = createAdminClient()
 
-  // Create auth user
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+  // Create auth user — the DB trigger handle_new_user() auto-creates the profile as student
+  const { error: authError } = await supabase.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
-    user_metadata: { name, role: 'student' },
+    user_metadata: { name: name.trim(), role: 'student' },
   })
 
   if (authError) {
@@ -28,24 +28,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Este email ja esta cadastrado.' }, { status: 400 })
     }
     return NextResponse.json({ error: authError.message }, { status: 400 })
-  }
-
-  // Create user profile as student
-  const { error: profileError } = await supabase.from('users').insert({
-    id: authData.user.id,
-    name: name.trim(),
-    email,
-    role: 'student',
-    level: 'bronze',
-    total_points: 0,
-    lifetime_points: 0,
-    streak_weeks: 0,
-  } as never)
-
-  if (profileError) {
-    // Cleanup auth user on failure
-    await supabase.auth.admin.deleteUser(authData.user.id)
-    return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
 
   return NextResponse.json({ success: true })
